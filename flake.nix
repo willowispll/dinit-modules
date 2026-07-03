@@ -4,6 +4,6 @@
   outputs =
     { ... }:
     {
-      nixosModules = builtins.mapAttrs (dir: _: ./modules/${dir}) (builtins.readDir ./modules);
+      nixosModules = import ./modules;
     };
 }
