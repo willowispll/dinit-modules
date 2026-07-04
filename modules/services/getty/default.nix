@@ -67,14 +67,16 @@ in
       name:
       let
         device = lib.removePrefix "getty-" name;
+        agetty = lib.getExe (if cfg.package != null then cfg.package else pkgs.util-linux);
       in
       {
         type = "process";
-        command = "${
-          lib.getExe (if cfg.package != null then cfg.package else pkgs.util-linux)
-        } ${lib.escapeShellArgs cfg.extraArgs} ${device}";
+        command = "${agetty} --noclear ${device} 38400 linux ${lib.escapeShellArgs cfg.extraArgs}";
         restart = true;
-        depends-on = [ "mdevd-coldplug" ];
+        smooth-recovery = true;
+        inittab-id = lib.toUpper (lib.removePrefix "tty" device);
+        inittab-line = device;
+        depends-on = [ "boot" ];
       }
     );
   };

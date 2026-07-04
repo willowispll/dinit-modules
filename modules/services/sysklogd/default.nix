@@ -43,7 +43,7 @@ in
       restart = true;
       log-type = "file";
       logfile = "/var/log/syslogd.log";
-      depends-on = [ "mdevd-coldplug" ];
+      depends-on = [ "boot" ];
     };
 
     environment.etc."syslog.d/nixos.conf".text = cfg.extraConfig;
