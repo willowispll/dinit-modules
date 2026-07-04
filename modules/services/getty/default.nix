@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.services.getty;
+  cfg = config.services.getty-dinit;
 in
 {
-  options.services.getty = {
+  options.services.getty-dinit = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;

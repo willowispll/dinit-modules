@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.services.sysklogd;
+  cfg = config.services.sysklogd-dinit;
 in
 {
-  options.services.sysklogd = {
+  options.services.sysklogd-dinit = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;

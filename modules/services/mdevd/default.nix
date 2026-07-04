@@ -14,7 +14,7 @@ let
 
   gidOf = name: toString config.ids.gids.${name};
 
-  cfg = config.services.mdevd;
+  cfg = config.services.mdevd-dinit;
 
   # Rules for the special standalone devices to be created at boot.
   specialRules =
@@ -95,7 +95,7 @@ let
   devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 *${devDiskScript}";
 in
 {
-  options.services.mdevd = {
+  options.services.mdevd-dinit = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
