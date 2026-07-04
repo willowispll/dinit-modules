@@ -10,7 +10,7 @@
   config = lib.mkIf config.dinit.enable {
     finit.services.dinit = {
       description = "dinit service manager";
-      command = "${pkgs.dinit}/bin/dinit -s /etc/dinit.d";
+      command = "${pkgs.dinit}/bin/dinit -d /etc/dinit.d";
       runlevels = "S12345789";
       log = true;
       respawn = true;
