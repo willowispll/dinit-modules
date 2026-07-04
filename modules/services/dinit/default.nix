@@ -18,7 +18,7 @@
 
     environment = {
       systemPackages = [ pkgs.dinit ];
-      etc."dinit.d/internal".text = ''
+      etc."dinit.d/boot".text = ''
         type = internal
       '';
     };
