@@ -71,7 +71,7 @@ in
       {
         type = "process";
         command = "${
-          lib.getExe (cfg.package or pkgs.util-linux)
+          lib.getExe (if cfg.package != null then cfg.package else pkgs.util-linux)
         } ${lib.escapeShellArgs cfg.extraArgs} ${device}";
         restart = true;
         depends-on = [ "mdevd-coldplug" ];
