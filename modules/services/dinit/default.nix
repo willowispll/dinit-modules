@@ -16,6 +16,11 @@
       respawn = true;
     };
 
-    environment.systemPackages = [ pkgs.dinit ];
+    environment = {
+      systemPackages = [ pkgs.dinit ];
+      etc."dinit.d/internal".text = ''
+        type = internal
+      '';
+    };
   };
 }
