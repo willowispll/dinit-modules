@@ -7,6 +7,12 @@
 {
   options.dinit.enable = lib.mkEnableOption "dinit service manager";
 
+  options.dinit.services = lib.mkOption {
+    type = lib.types.attrsOf lib.types.attrs;
+    default = { };
+    description = "Dinit service definitions to generate in /etc/dinit.d";
+  };
+
   config = lib.mkIf config.dinit.enable {
     finit.services.dinit = {
       description = "dinit service manager";
@@ -28,6 +34,8 @@
               "${name} = ${if value then "true" else "false"}\n"
             else if builtins.isList value then
               lib.concatMapStrings (v: "${name} = ${toString v}\n") value
+            else if builtins.isAttrs value then
+              builtins.throw "dinit: cannot coerce set to string for key '${name}' in service definition"
             else
               "${name} = ${toString value}\n";
 
@@ -35,7 +43,7 @@
             service:
             lib.concatStrings (
               lib.mapAttrsToList (
-                key: value: if key == "path" then "env = PATH=${lib.makeBinPath value}\n" else mkLine key value
+                key: value: if key == "path" then "env = PATH=${lib.makeSearchPath "bin" value}\n" else mkLine key value
               ) service
             );
         in
