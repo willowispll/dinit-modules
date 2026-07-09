@@ -11,7 +11,7 @@ in
   options.services.getty-dinit = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = ''
         Whether to enable `getty`.
       '';
@@ -67,16 +67,16 @@ in
       name:
       let
         device = lib.removePrefix "getty-" name;
-        agetty = lib.getExe (if cfg.package != null then cfg.package else pkgs.util-linux);
+        agetty = lib.getExe' (if cfg.package != null then cfg.package else pkgs.util-linux) "agetty";
       in
       {
         type = "process";
         command = "${agetty} --noclear ${device} 38400 linux ${lib.escapeShellArgs cfg.extraArgs}";
+        waits-for = [ "mdevd" ];
         restart = true;
         smooth-recovery = true;
         inittab-id = lib.toUpper (lib.removePrefix "tty" device);
         inittab-line = device;
-        depends-on = [ "boot" ];
       }
     );
   };

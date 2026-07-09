@@ -40,10 +40,11 @@ in
     dinit.services.syslogd = {
       type = "process";
       command = "${cfg.package}/bin/syslogd -F";
+      waits-for = [ "mdevd" ];
       restart = true;
+      smooth-recovery = true;
       log-type = "file";
       logfile = "/var/log/syslogd.log";
-      depends-on = [ "boot" ];
     };
 
     environment.etc."syslog.d/nixos.conf".text = cfg.extraConfig;

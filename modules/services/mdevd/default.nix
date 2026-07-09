@@ -193,7 +193,6 @@ in
         + lib.optionalString cfg.debug " -v 3";
       restart = true;
       smooth-recovery = true;
-      depends-on = [ "boot" ];
       log-type = "file";
       logfile = "/var/log/mdevd.log";
       path = [
