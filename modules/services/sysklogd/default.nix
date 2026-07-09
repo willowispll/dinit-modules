@@ -40,7 +40,6 @@ in
     dinit.services.syslogd = {
       type = "process";
       command = "${cfg.package}/bin/syslogd -F";
-      waits-for = [ "mdevd" ];
       restart = true;
       smooth-recovery = true;
       log-type = "file";

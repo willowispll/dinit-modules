@@ -209,7 +209,6 @@ in
         "${cfg.package}/bin/mdevd-coldplug"
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
-      waits-for = [ "mdevd" ];
       log-type = "file";
       logfile = "/var/log/coldplug.log";
     };
