@@ -7,12 +7,6 @@
 {
   options.dinit.enable = lib.mkEnableOption "dinit service manager";
 
-  options.dinit.services = lib.mkOption {
-    type = lib.types.attrsOf lib.types.attrs;
-    default = { };
-    description = "Dinit service definitions to generate in /etc/dinit.d";
-  };
-
   config = lib.mkIf config.dinit.enable {
     finit.services.dinit = {
       description = "dinit service manager";
@@ -43,7 +37,8 @@
             service:
             lib.concatStrings (
               lib.mapAttrsToList (
-                key: value: if key == "path" then "env = PATH=${lib.makeSearchPath "bin" value}\n" else mkLine key value
+                key: value:
+                if key == "path" then "env = PATH=${lib.makeSearchPath "bin" value}\n" else mkLine key value
               ) service
             );
         in
