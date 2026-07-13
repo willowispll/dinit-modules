@@ -92,7 +92,10 @@ let
     version = "4.99.0";
     dontUnpack = true;
     buildPhase = ''$CC -o finit ${src}'';
-    installPhase = ''install -Dm755 finit $out/bin/finit'';
+    installPhase = ''
+      install -Dm755 finit $out/bin/finit
+      mkdir -p $out/libexec/finit/plugins
+    '';
   };
 
   # finix's finit.package apply calls:
