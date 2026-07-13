@@ -5,7 +5,15 @@
   ...
 }:
 {
-  options.dinit.enable = lib.mkEnableOption "dinit service manager";
+  options.dinit = {
+    enable = lib.mkEnableOption "dinit service manager";
+
+    services = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.attrsOf lib.types.anything);
+      default = { };
+      description = "Dinit service definitions rendered to /etc/dinit.d/.";
+    };
+  };
 
   config = lib.mkIf config.dinit.enable {
     finit.services.dinit = {
@@ -20,7 +28,7 @@
       systemPackages = [ pkgs.dinit ];
       etc =
         let
-          services = config.dinit.services or { };
+          services = config.dinit.services;
 
           mkLine =
             name: value:
@@ -59,11 +67,14 @@
 
     system.activation.scripts.dinitBootD =
       let
-        services = builtins.attrNames (config.dinit.services or { });
+        services = builtins.attrNames config.dinit.services;
       in
-      lib.mkIf (services != [ ]) ''
-        mkdir -p /etc/dinit.d/boot.d
-        ${lib.concatMapStrings (name: "ln -sf ../${name} /etc/dinit.d/boot.d/${name}\n") services}
-      '';
+      lib.mkIf (services != [ ]) {
+        deps = [ "etc" ];
+        text = ''
+          mkdir -p /etc/dinit.d/boot.d
+          ${lib.concatMapStrings (name: "ln -sf ../${name} /etc/dinit.d/boot.d/${name}\n") services}
+        '';
+      };
   };
 }
