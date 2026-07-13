@@ -103,9 +103,10 @@ let
   # finix's finit.package apply calls:
   #   (package.override { plymouthSupport = … }).overrideAttrs (o: { configureFlags = … })
   # runCommand results don't carry .override, so we stub both to return drv unchanged.
-  initPkg = drv // {
-    version = pkgs.finit.version;
-    override = _: drv // { overrideAttrs = _: drv; };
+  # version must survive both hops so the versionAtLeast assertion in finit/default.nix passes.
+  versionedDrv = drv // { version = pkgs.finit.version; };
+  initPkg = versionedDrv // {
+    override = _: versionedDrv // { overrideAttrs = _: versionedDrv; };
   };
 in
 {
