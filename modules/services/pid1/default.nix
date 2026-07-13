@@ -85,7 +85,7 @@ let
     }
   '';
 
-  initPkg = pkgs.stdenv.mkDerivation {
+  drv = pkgs.stdenv.mkDerivation {
     pname = "dinit-stage2-init";
     # Satisfies the `lib.versionAtLeast cfg.package.version "4.16"` assertion
     # in the finix finit module, whose package slot we're borrowing.
@@ -93,6 +93,14 @@ let
     dontUnpack = true;
     buildPhase = ''$CC -o finit ${src}'';
     installPhase = ''install -Dm755 finit $out/bin/finit'';
+  };
+
+  # finix's finit.package apply calls:
+  #   (package.override { plymouthSupport = …; }).overrideAttrs (o: { configureFlags = …; })
+  # stdenv.mkDerivation doesn't get .override (that comes from callPackage), so
+  # we stub both to return our binary unchanged.
+  initPkg = drv // {
+    override = _: drv // { overrideAttrs = _: drv; };
   };
 in
 {
