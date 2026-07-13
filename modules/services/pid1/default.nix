@@ -122,4 +122,20 @@ in
       source = "${pkgs.finit}/bin/finit";
     }
   ];
+
+  # The security wrappers (unix_chkpwd, setuid helpers, etc.) are normally
+  # populated by finit.tasks.suid-sgid-wrappers after stage-2 finit mounts
+  # /run/wrappers.  Since we replaced finit with dinit, that task never runs.
+  # Re-run it as an activation script so PAM finds unix_chkpwd before dinit
+  # starts getty.
+  system.activation.scripts.security-wrappers = {
+    deps = [ "specialfs" ];
+    text = ''
+      if ! mountpoint -q /run/wrappers 2>/dev/null; then
+        mkdir -p /run/wrappers
+        mount -t tmpfs -o mode=755,nodev tmpfs /run/wrappers
+      fi
+      ${config.finit.tasks.suid-sgid-wrappers.command}
+    '';
+  };
 }
