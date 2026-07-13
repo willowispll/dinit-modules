@@ -138,4 +138,27 @@ in
       ${config.finit.tasks.suid-sgid-wrappers.command}
     '';
   };
+
+  # Override the login PAM service for the dinit environment:
+  #   - pam_rootok.so lets root in without a password (needed for --autologin)
+  #   - pam_loginuid.so is optional (requires kernel audit, not available in VMs)
+  #   - pam_lastlog.so is dropped (needs /var/log/lastlog which we don't create)
+  security.pam.services.login.text = lib.mkForce ''
+    # Authentication management.
+    auth       sufficient pam_rootok.so
+    auth       sufficient pam_unix.so likeauth nullok
+    auth       required   pam_deny.so
+
+    # Account management.
+    account    required   pam_unix.so
+
+    # Password management.
+    password   sufficient pam_unix.so nullok yescrypt
+
+    # Session management.
+    session    required   pam_env.so conffile=/etc/security/pam_env.conf readenv=0
+    session    required   pam_unix.so
+    session    optional   pam_loginuid.so
+    session    optional   pam_limits.so conf=/etc/security/limits.conf
+  '';
 }
