@@ -7,12 +7,6 @@
 {
   options.dinit = {
     enable = lib.mkEnableOption "dinit service manager";
-
-    services = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.attrsOf lib.types.anything);
-      default = { };
-      description = "Dinit service definitions rendered to /etc/dinit.d/.";
-    };
   };
 
   config = lib.mkIf config.dinit.enable {
