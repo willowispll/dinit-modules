@@ -38,18 +38,20 @@ in
 
   config = lib.mkIf cfg.enable {
     dinit.services.syslogd = {
-      type = "process";
       command = "${cfg.package}/bin/syslogd -F";
       restart = true;
-      smooth-recovery = true;
-      log-type = "file";
-      logfile = "/var/log/syslogd.log";
+      smoothRecovery = true;
     };
+
+    dinit.boot = [ "syslogd" ];
 
     environment.etc."syslog.d/nixos.conf".text = cfg.extraConfig;
     environment.etc."syslog.conf".source =
       lib.mkDefault "${cfg.package}/share/doc/sysklogd/syslog.conf";
 
-    system.switch.inhibitors.syslogd = "${cfg.package}/bin/syslogd -F";
+    system.activation.scripts.var-log = {
+      deps = [ "specialfs" ];
+      text = "mkdir -p /var/log";
+    };
   };
 }

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   src = pkgs.writeText "dinit-init.c" ''
     #include <fcntl.h>
@@ -79,8 +84,8 @@ let
   ourBinary = pkgs.stdenv.mkDerivation {
     name = "dinit-stage2-binary";
     dontUnpack = true;
-    buildPhase = ''$CC -o finit ${src}'';
-    installPhase = ''install -Dm755 finit $out/bin/finit'';
+    buildPhase = "$CC -o finit ${src}";
+    installPhase = "install -Dm755 finit $out/bin/finit";
   };
 
   # Symlink-farm of the real finit with only bin/finit replaced by our binary.
@@ -104,7 +109,9 @@ let
   #   (package.override { plymouthSupport = … }).overrideAttrs (o: { configureFlags = … })
   # runCommand results don't carry .override, so we stub both to return drv unchanged.
   # version must survive both hops so the versionAtLeast assertion in finit/default.nix passes.
-  versionedDrv = drv // { version = pkgs.finit.version; };
+  versionedDrv = drv // {
+    version = pkgs.finit.version;
+  };
   initPkg = versionedDrv // {
     override = _: versionedDrv // { overrideAttrs = _: versionedDrv; };
   };
@@ -139,26 +146,4 @@ in
     '';
   };
 
-  # Override the login PAM service for the dinit environment:
-  #   - pam_rootok.so lets root in without a password (needed for --autologin)
-  #   - pam_loginuid.so is optional (requires kernel audit, not available in VMs)
-  #   - pam_lastlog.so is dropped (needs /var/log/lastlog which we don't create)
-  security.pam.services.login.text = lib.mkForce ''
-    # Authentication management.
-    auth       sufficient pam_rootok.so
-    auth       sufficient pam_unix.so likeauth nullok
-    auth       required   pam_deny.so
-
-    # Account management.
-    account    required   pam_unix.so
-
-    # Password management.
-    password   sufficient pam_unix.so nullok yescrypt
-
-    # Session management.
-    session    required   pam_env.so conffile=/etc/security/pam_env.conf readenv=0
-    session    required   pam_unix.so
-    session    optional   pam_loginuid.so
-    session    optional   pam_limits.so conf=/etc/security/limits.conf
-  '';
 }

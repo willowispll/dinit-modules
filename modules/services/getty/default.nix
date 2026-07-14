@@ -34,7 +34,7 @@ in
       type = with lib.types; listOf str;
       default = [ ];
       description = ''
-        Additional arguments to pass to {option}`services.getty.package`.
+        Additional arguments to pass to {option}`services.getty-dinit.package`.
       '';
     };
 
@@ -70,14 +70,12 @@ in
         agetty = lib.getExe' (if cfg.package != null then cfg.package else pkgs.util-linux) "agetty";
       in
       {
-        type = "process";
         command = "${agetty} --noclear ${device} 38400 linux ${lib.escapeShellArgs cfg.extraArgs}";
-        waits-for = [ "mdevd" ];
         restart = true;
-        smooth-recovery = true;
-        inittab-id = lib.toUpper (lib.removePrefix "tty" device);
-        inittab-line = device;
+        smoothRecovery = true;
       }
     );
+
+    dinit.boot = map (dev: "getty-${dev}") cfg.ttys;
   };
 }

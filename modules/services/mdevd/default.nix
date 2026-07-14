@@ -228,6 +228,5 @@ in
       '';
     };
 
-    system.switch.inhibitors.device-manager = "mdevd";
   };
 }
