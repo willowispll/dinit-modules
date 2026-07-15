@@ -192,7 +192,7 @@ in
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
       restart = true;
-      smooth-recovery = true;
+      smoothRecovery = true;
       logType = "file";
       logFile = "/var/log/mdevd.log";
       path = [
