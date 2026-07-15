@@ -192,9 +192,9 @@ in
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
       restart = true;
-      smooth-recovery = true;
-      log-type = "file";
-      logfile = "/var/log/mdevd.log";
+      smoothRecovery = true;
+      logType = "file";
+      logFile = "/var/log/mdevd.log";
       path = [
         config.programs.coreutils.package
         pkgs.execline
@@ -209,8 +209,8 @@ in
         "${cfg.package}/bin/mdevd-coldplug"
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
-      log-type = "file";
-      logfile = "/var/log/coldplug.log";
+      logType = "file";
+      logFile = "/var/log/coldplug.log";
     };
 
     # TODO: share between udev and mdevd
@@ -228,6 +228,5 @@ in
       '';
     };
 
-    system.switch.inhibitors.device-manager = "mdevd";
   };
 }
