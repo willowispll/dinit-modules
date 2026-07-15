@@ -194,7 +194,7 @@ in
       restart = true;
       smooth-recovery = true;
       logType = "file";
-      logfile = "/var/log/mdevd.log";
+      logFile = "/var/log/mdevd.log";
       path = [
         config.programs.coreutils.package
         pkgs.execline
@@ -210,7 +210,7 @@ in
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
       logType = "file";
-      logfile = "/var/log/coldplug.log";
+      logFile = "/var/log/coldplug.log";
     };
 
     # TODO: share between udev and mdevd
