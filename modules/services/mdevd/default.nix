@@ -193,7 +193,7 @@ in
         + lib.optionalString cfg.debug " -v 3";
       restart = true;
       smooth-recovery = true;
-      log-type = "file";
+      logType = "file";
       logfile = "/var/log/mdevd.log";
       path = [
         config.programs.coreutils.package
@@ -209,7 +209,7 @@ in
         "${cfg.package}/bin/mdevd-coldplug"
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
-      log-type = "file";
+      logType = "file";
       logfile = "/var/log/coldplug.log";
     };
 
