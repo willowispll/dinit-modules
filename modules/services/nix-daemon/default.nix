@@ -300,7 +300,7 @@ in
       deps = [ "specialfs" ];
       text = ''
         mkdir -p /nix/var/nix/daemon-socket
-        rm -f /nix/var/nix/gcroots/tmp /nix/var/nix/temproots
+        rm -rf /nix/var/nix/gcroots/tmp /nix/var/nix/temproots
         mkdir -p /nix/var
         ln -sf /run/booted-system /nix/var/nix/gcroots/booted-system
         mkdir -p /nix/var/nix/gcroots
