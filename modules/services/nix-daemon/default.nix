@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.services.nix-daemon-dinit;
+  cfg = config.services.nix-daemon;
 
   configType =
     let
@@ -65,7 +65,7 @@ let
     '';
 in
 {
-  options.services.nix-daemon-dinit = {
+  options.services.nix-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -324,7 +324,7 @@ in
       nixbld.gid = config.ids.gids.nixbld;
     };
 
-    services.nix-daemon-dinit.settings = {
+    services.nix-daemon.settings = {
       trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
       trusted-users = [ "root" ];
       substituters = lib.mkAfter [ "https://cache.nixos.org/" ];
