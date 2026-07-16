@@ -72,7 +72,7 @@ in
       {
         command = "${agetty} --noclear ${device} 38400 linux ${lib.escapeShellArgs cfg.extraArgs}";
         type = "process";
-        waits-for = [ "mdevd" ];
+        waits-for = [ "mdevd-coldplug" ];
         restart = true;
         smooth-recovery = true;
         boot = true;
