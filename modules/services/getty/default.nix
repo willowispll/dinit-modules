@@ -71,11 +71,11 @@ in
       in
       {
         command = "${agetty} --noclear ${device} 38400 linux ${lib.escapeShellArgs cfg.extraArgs}";
+        type = "process";
         restart = true;
-        smoothRecovery = true;
+        smooth-recovery = true;
+        boot = true;
       }
     );
-
-    dinit.boot = map (dev: "getty-${dev}") cfg.ttys;
   };
 }

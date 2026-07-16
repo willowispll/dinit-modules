@@ -39,11 +39,11 @@ in
   config = lib.mkIf cfg.enable {
     dinit.services.syslogd = {
       command = "${cfg.package}/bin/syslogd -F";
+      type = "process";
       restart = true;
-      smoothRecovery = true;
+      smooth-recovery = true;
+      boot = true;
     };
-
-    dinit.boot = [ "syslogd" ];
 
     environment.etc."syslog.d/nixos.conf".text = cfg.extraConfig;
     environment.etc."syslog.conf".source =
