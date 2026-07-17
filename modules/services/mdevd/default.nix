@@ -134,55 +134,9 @@ in
       '';
     };
 
-    hotplugRules = mkOption {
-      type = types.lines;
-      description = ''
-        Mdevd rules for hotplug events.
-        These rules are active after the initial `mdevd` daemon
-        has coldbooted with the `services.mdevd.coldplug` rules.
-      '';
-    };
-
-    coldplugRules = mkOption {
-      type = types.lines;
-      description = ''
-        Mdeved rules for coldplug events during the initramfs stage of booting.
-      '';
-    };
   };
 
   config = mkIf cfg.enable {
-
-    # Populate with boot rules.
-    services.mdevd = {
-      hotplugRules = lib.mkMerge [
-        # fallthrough rules at the top
-        (lib.mkOrder 250 modaliasRule)
-        (lib.mkBefore devDiskRule)
-        specialRules
-      ];
-      coldplugRules = lib.concatLines [
-        modaliasRule
-        specialRules
-        devDiskRule
-      ];
-    };
-
-    # Mdevd coldplugs the system during the stage-1 init in initramfs.
-    # See ../../boot/initrd/default.nix
-    boot.initrd.contents = [
-      {
-        target = "/etc/mdev.conf";
-        source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
-      }
-      {
-        source = devDiskScript;
-        target = "/etc/mdevd-disk.sh";
-      }
-    ];
-
-    environment.etc."mdev.conf".text = config.services.mdevd.hotplugRules;
-
     dinit.services.mdevd = {
       type = "process";
       command =
