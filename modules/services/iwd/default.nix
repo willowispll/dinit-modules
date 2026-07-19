@@ -58,7 +58,8 @@ in {
       smooth-recovery = true;
       log-type = "file";
       logfile = "/var/log/iwd.log";
-      boot = true;
+      boot = false;
+      default = true;
 
       path = lib.optionals config.programs.resolvconf.enable [
         config.programs.resolvconf.package

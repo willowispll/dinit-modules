@@ -214,7 +214,8 @@ in
       waits-for = [ "syslogd" ];
       restart = true;
       smooth-recovery = true;
-      boot = true;
+      boot = false;
+      default = true;
 
       path = lib.optionals config.programs.resolvconf.enable [
         config.programs.resolvconf.package

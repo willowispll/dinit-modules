@@ -111,7 +111,8 @@ in
       waits-for = [ "syslogd" ];
       restart = true;
       smooth-recovery = true;
-      boot = true;
+      boot = false;
+      default = true;
 
       environment = lib.optionalAttrs cfg.debug {
         DBUS_VERBOSE = "1";
