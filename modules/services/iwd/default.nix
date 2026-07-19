@@ -32,7 +32,7 @@ in {
     dinit.services.iwd = {
       type = "process";
       command = "${cfg.package}/libexec/iwd";
-      waits-for = [ "syslogd" ];
+      waits-for = [ "dbus" ];
       restart = true;
       smooth-recovery = true;
       log-type = "file";
